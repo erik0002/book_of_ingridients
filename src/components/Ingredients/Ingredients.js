@@ -9,10 +9,18 @@ const Ingredients = () => {
     const [userIngredients, setUserIngredients] = useState([]);
 
     const addIngredientHandler = ingredient => {
-        setUserIngredients(prevIngredients => [
-            ...prevIngredients,
-            {id: Math.random().toString(), ...ingredient}
-        ]);
+        fetch('https://redux-toolkit-1111b-default-rtdb.europe-west1.firebasedatabase.app/ingredients.json', {
+            method: 'POST',
+            body: JSON.stringify(ingredient),
+            headers: {'Content-Type': 'application/json'}
+        }).then(response => {
+            return response.json();
+        }).then(responseData => {
+            setUserIngredients(prevIngredients => [
+                ...prevIngredients,
+                {id: responseData.name, ...ingredient}
+            ]);
+        })
     };
 
     const removeIngredientHandler = ingredientId => {
