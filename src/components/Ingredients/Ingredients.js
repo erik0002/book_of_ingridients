@@ -1,4 +1,4 @@
-import React, {useEffect, useCallback, useReducer} from 'react';
+import React, {useEffect, useCallback, useReducer, useMemo} from 'react';
 
 import IngredientForm from './IngredientForm';
 import IngredientList from "./IngredientList";
@@ -49,7 +49,7 @@ const Ingredients = () => {
         dispatch({type: 'SET', ingredients: filteredIngredients})
     }, []);
 
-    const addIngredientHandler = ingredient => {
+    const addIngredientHandler = useCallback(ingredient => {
         //setIsLoading(true);
         dispatchHttp({type: 'SEND'});
         fetch('https://redux-toolkit-1111b-default-rtdb.europe-west1.firebasedatabase.app/ingredients.json', {
@@ -71,9 +71,9 @@ const Ingredients = () => {
                 ingredient: {id: responseData.name, ...ingredient}
             })
         })
-    };
+    }, []);
 
-    const removeIngredientHandler = ingredientId => {
+    const removeIngredientHandler = useCallback(ingredientId => {
         //setIsLoading(true);
         dispatchHttp({type: 'SEND'});
         fetch(`https://redux-toolkit-1111b-default-rtdb.europe-west1.firebasedatabase.app/ingredients/${ingredientId}.json`, {
@@ -88,12 +88,22 @@ const Ingredients = () => {
             // setError(error.message);
             // setIsLoading(false);
         });
-    };
+    }, []);
 
     const clearError = () => {
         //setError(null);
         dispatchHttp({type: 'CLEAR'});
-    }
+    };
+
+    const ingredientList = useMemo(() => {
+        return (
+            <IngredientList
+                ingredients={userIngredients}
+                onRemoveItem={removeIngredientHandler}/>
+        )
+    }, [userIngredients, removeIngredientHandler])
+
+
 
     return (
         <div className="App">
@@ -106,9 +116,7 @@ const Ingredients = () => {
 
             <section>
                 <Search onLoadIngredients={filteredIngredientsHandler}/>
-                <IngredientList
-                    ingredients={userIngredients}
-                    onRemoveItem={removeIngredientHandler}/>
+                {ingredientList}
                 {/* Need to add list here! */}
             </section>
         </div>
