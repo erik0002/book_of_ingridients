@@ -32,8 +32,12 @@ const Ingredients = () => {
     };
 
     const removeIngredientHandler = ingredientId => {
-        setUserIngredients(prevIngredients => prevIngredients.filter((i) => i.id !== ingredientId)
-        );
+        fetch(`https://redux-toolkit-1111b-default-rtdb.europe-west1.firebasedatabase.app/ingredients/${ingredientId}.json`, {
+            method: 'DELETE',
+        }).then(response => {
+            setUserIngredients(prevIngredients => prevIngredients.filter((i) => i.id !== ingredientId)
+            );
+        })
     }
 
     return (
