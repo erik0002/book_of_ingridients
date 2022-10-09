@@ -11,17 +11,24 @@ const Ingredients = () => {
     const addIngredientHandler = ingredient => {
         setUserIngredients(prevIngredients => [
             ...prevIngredients,
-            { id: Math.random().toString(), ...ingredient}
+            {id: Math.random().toString(), ...ingredient}
         ]);
     };
 
+    const removeIngredientHandler = ingredientId => {
+        setUserIngredients(prevIngredients => prevIngredients.filter((i) => i.id !== ingredientId)
+        );
+    }
+
     return (
         <div className="App">
-            <IngredientForm onAddIngredient={addIngredientHandler} />
+            <IngredientForm onAddIngredient={addIngredientHandler}/>
 
             <section>
                 <Search/>
-                <IngredientList ingredients={userIngredients} onRemoveItem={() => {}}/>
+                <IngredientList
+                    ingredients={userIngredients}
+                    onRemoveItem={removeIngredientHandler}/>
                 {/* Need to add list here! */}
             </section>
         </div>
